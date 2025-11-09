@@ -1,0 +1,58 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: check-xml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: debug-statements
+      - id: requirements-txt-fixer
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 6.0.0
+    hooks:
+      - id: isort
+        args:
+          [
+            "--py=310",
+            "--length-sort",
+            "--line-length=88",
+            "--multi-line=VERTICAL_PREFIX_FROM_MODULE_IMPORT"
+          ]
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.19.1
+    hooks:
+      - id: pyupgrade
+        args: ["--py310-plus"]
+
+  - repo: https://github.com/hadialqattan/pycln
+    rev: v2.5.0
+    hooks:
+      - id: pycln
+        args: [--all]
+
+  # - repo: https://github.com/google/yapf
+  #   rev: v0.43.0
+  #   hooks:
+  #     - id: yapf
+  #       args:
+  #         [
+  #           "--in-place",
+  #           "--style",
+  #           "{
+  #             based_on_style: pep8,
+  #             column_limit: 88,
+  #             split_arguments_when_comma_terminated: true,
+  #             spaces_around_subscript_colon: true,
+  #             dedent_closing_brackets: true,
+  #             coalesce_brackets: true,
+  #             indent_dictionary_value: false,
+  #             allow_split_before_dict_value: false
+  #           }",
+  #         ]

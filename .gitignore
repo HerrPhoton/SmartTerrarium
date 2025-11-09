@@ -1,0 +1,26 @@
+# Datasets
+datasets/*
+!datasets/.gitkeep
+
+# Virtual enviroment
+.venv/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Python
+__pycache__/
+
+# Environment variables
+.env
+
+# Logs
+src/nn/logs/*
+!src/nn/logs/.gitkeep
+
+# Weights
+*.pt
+*.tf*
