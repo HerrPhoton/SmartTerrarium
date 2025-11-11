@@ -8,35 +8,36 @@ class ImageDeduplicator:
 
     def __init__(self, verbose: bool = False):
         self.cnn = CNN(verbose)
-        self.image_dir: str | Path | None = None
+        self.image_dir: str | None = None
         self.duplicates_map: dict[str, list[str]] | None = None
-        self.files_with_duplicates: list[str] | None = None
-        self.duplicates_list: list[str] | None = None
+        self.files_with_duplicates: set[str] | None = None
+        self.duplicates: set[str] | None = None
 
     def find_duplicates(
         self,
-        image_dir: str,
+        image_dir: str | Path,
         min_similarity_threshold: float = 0.9,
     ) -> dict[str, list[str]]:
         """Находит дубликаты изображений в указанной директории.
 
-        :param str image_dir: Путь к директории с изображениями
+        :param str | Path image_dir: Путь к директории с изображениями
         :param float min_similarity_threshold: Минимальный порог схожести (0.0-1.0)
         :return dict[str, list[str]]: Словарь, где ключ - имя файла, значения - список имен файлов дубликатов
         """
+        self.image_dir = str(image_dir)
+
         self.duplicates_map = self.cnn.find_duplicates(
             image_dir=image_dir,
             min_similarity_threshold=min_similarity_threshold,
         )
-        self.image_dir = image_dir
 
-        self.files_with_duplicates = []
-        self.duplicates_list = []
+        self.files_with_duplicates = set()
+        self.duplicates = set()
 
         for file, duplicates in self.duplicates_map.items():
             if len(duplicates) > 0:
-                self.files_with_duplicates.append(file)
-                self.duplicates_list.extend(duplicates)
+                self.files_with_duplicates.update(file)
+                self.duplicates.update(duplicates)
 
         return self.duplicates_map
 
@@ -62,7 +63,7 @@ class ImageDeduplicator:
         labels_dir = Path(labels_dir) if labels_dir is not None else None
 
         removed_files = []
-        for file in self.duplicates_list:
+        for file in self.duplicates:
             image_path = image_dir / file
             removed_files.append(str(image_path))
 
@@ -78,7 +79,7 @@ class ImageDeduplicator:
 
         if not dry_run:
             self.duplicates_map = None
-            self.duplicates_list = None
+            self.duplicates = None
             self.image_dir = None
 
         return removed_files
